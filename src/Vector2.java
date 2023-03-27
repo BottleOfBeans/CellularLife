@@ -32,4 +32,7 @@ public class Vector2 {
     public Vector2 returnDivide(double z){
         return new Vector2(x/z, y/z);
     }
+    public double getAngle(){
+        return Math.atan2(y,x);
+    }
 }

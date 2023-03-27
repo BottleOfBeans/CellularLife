@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
+import java.util.ArrayList;
 
 public class GameWindow extends JPanel  implements Runnable{
     /*
@@ -49,9 +51,21 @@ public class GameWindow extends JPanel  implements Runnable{
         gameThread.start();
     }
 
+    /*
+        Particles!
+     */
+    public static Particle p1 = new Particle(new Vector2(0,-10), new Vector2(gameWidth/2,gameHeight/2));
+    public static Particle p2 = new Particle(new Vector2(10,10), new Vector2(gameWidth/2 + 30,gameHeight/2 + 30));
+    public static ArrayList<Particle> particles = new ArrayList<Particle>();
+
     //Loop that runs the thread, allows for it to sleep and start and ensures proper frame speed
     @Override
     public void run(){
+        /*
+            Add code here that runs before he game starts
+         */
+        particles.add(p1);
+        particles.add(p2);
 
         double drawInterval = 1000000000/FPS;
         double delta = 0;
@@ -86,22 +100,17 @@ public class GameWindow extends JPanel  implements Runnable{
         super.paintComponent(g);
         Graphics2D graphics = (Graphics2D)g;
 
-        graphics.setColor(Color.RED);
-
-        Node examples = new Node(new Rectangle(0,0,gameWidth, gameHeight),0);
-
-        Point p1 = new Point(gameWidth/4,gameHeight/4);
-        Point p2 = new Point(gameWidth* 3 / 4, gameHeight * 3 / 4);
-
-        examples.subdivide();
-
-        for(Node parts: examples.children){
-            parts.subdivide();
+        for(Particle p : particles){
+            graphics.setColor(Color.yellow);
+            graphics.fill(p.getEffectArea());
         }
 
-        examples.displayNode(g);
-
-
+        for(Particle p : particles){
+            graphics.setColor(Color.red);
+            graphics.fill(p.getParticle());
+            graphics.setColor(Color.green);
+            graphics.draw(p.directionLine());
+        }
 
         //Stopping the use of the library to ensure that no more processing power than needed is used
         graphics.dispose();

@@ -16,7 +16,7 @@ public class Main {
         window.setTitle("Romir's Silly Goofy Little Game Thing :)");
         GameWindow gameWindow = new GameWindow();
         window.add(gameWindow);
-        //window.setUndecorated(true);
+        window.setUndecorated(true);
         window.pack();
         window.setVisible(true);
         gameWindow.startWindowThread();

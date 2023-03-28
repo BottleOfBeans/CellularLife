@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameWindow extends JPanel  implements Runnable{
     /*
@@ -20,8 +20,8 @@ public class GameWindow extends JPanel  implements Runnable{
         Game Width and Height takes into account the columns and rows and calculates the window heights and widths using all the factors provided above
      */
     static int ActualTileSize = GameTileSize * ScalableValue;
-    static int gameWidth = 500; //gameColumnAmount*ActualTileSize;
-    static int gameHeight = 500; //gameRowAmount*ActualTileSize;
+    static int gameWidth = 1920; //gameColumnAmount*ActualTileSize;
+    static int gameHeight = 1080; //gameRowAmount*ActualTileSize;
 
     /*
         Offsets
@@ -34,7 +34,7 @@ public class GameWindow extends JPanel  implements Runnable{
     Thread gameThread;
 
     //Game Values
-    int FPS = 1;
+    int FPS = 144;
 
 
     //Creating the game windows and setting up the settings
@@ -54,8 +54,7 @@ public class GameWindow extends JPanel  implements Runnable{
     /*
         Particles!
      */
-    public static Particle p1 = new Particle(new Vector2(0,-10), new Vector2(gameWidth/2,gameHeight/2));
-    public static Particle p2 = new Particle(new Vector2(10,10), new Vector2(gameWidth/2 + 30,gameHeight/2 + 30));
+    public double MaxParticle = 500;
     public static ArrayList<Particle> particles = new ArrayList<Particle>();
 
     //Loop that runs the thread, allows for it to sleep and start and ensures proper frame speed
@@ -64,8 +63,16 @@ public class GameWindow extends JPanel  implements Runnable{
         /*
             Add code here that runs before he game starts
          */
-        particles.add(p1);
-        particles.add(p2);
+        Random rand = new Random();
+        
+        for(int i = 0; i < MaxParticle; i++){
+            double randomXVelo = rand.nextDouble(-50,50);
+            double randomYVelo = rand.nextDouble(-50,50);
+            double randomXPos = rand.nextInt(0,gameWidth);
+            double randomYPos = rand.nextInt(0,gameHeight);
+            particles.add(new Particle(new Vector2(randomXVelo, randomYVelo), new Vector2(randomXPos, randomYPos)));
+        }
+
 
         double drawInterval = 1000000000/FPS;
         double delta = 0;
@@ -90,7 +97,7 @@ public class GameWindow extends JPanel  implements Runnable{
     }
 
     public void update(){
-        ;
+        
     }
 
     //Function that paints the updated version of the frame {FPS} times a second.
@@ -100,16 +107,18 @@ public class GameWindow extends JPanel  implements Runnable{
         super.paintComponent(g);
         Graphics2D graphics = (Graphics2D)g;
 
-        for(Particle p : particles){
-            graphics.setColor(Color.yellow);
+        for(Particle p:particles){
+            graphics.setColor(Color.gray);
             graphics.fill(p.getEffectArea());
         }
 
         for(Particle p : particles){
-            graphics.setColor(Color.red);
+            graphics.setColor(p.color);
             graphics.fill(p.getParticle());
-            graphics.setColor(Color.green);
+            graphics.setColor(Color.PINK);
             graphics.draw(p.directionLine());
+            p.calculateAttraction(particles);
+            p.updateLocation();
         }
 
         //Stopping the use of the library to ensure that no more processing power than needed is used

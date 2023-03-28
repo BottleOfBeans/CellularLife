@@ -1,26 +1,58 @@
+import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Particle extends GameWindow{
 
     double G = 10;
     double effectradius = 20;
-
-    public double radius;
+    double radius = 5;
+    
+    double[][] attractionForces = {
+    // R  G  Y
+      {0, 0, 0}, // R 
+      {0, 0, 0}, // G
+      {0, 0, 0}, // Y
+    };
+    double[] currentForce;
+    
+    public Color color = Color.white;
+    public int colorCode;
     public Vector2 changeVector;
     public Vector2 currentPos;
     public double diameter;
     public double effectDiameter;
 
-    public Particle(Vector2 gchangeVector, Vector2 gcurrentPos){
+    public Particle(Vector2 changeVector, Vector2 currentPos){
 
-        changeVector = gchangeVector;
-        currentPos = gcurrentPos;
+        Random rand = new Random();
 
-        radius = 10;
+        this.changeVector = changeVector;
+        this.currentPos = currentPos;
+
         diameter = radius*2;
         effectDiameter = diameter + effectradius * 2;
+
+        int i = rand.nextInt(0, 3);
+
+        if(i == 0){
+            this.color = Color.GREEN;
+            currentForce = attractionForces[1];
+            colorCode = 1;
+        }
+        else if( i == 1){
+            this.color = Color.YELLOW;
+            currentForce = attractionForces[2];
+            colorCode = 2;
+        }
+        else{
+            this.color = Color.RED;
+            currentForce = attractionForces[0];
+            colorCode = 0;
+        }
+
     }
 
     public void updateLocation(){
@@ -37,6 +69,16 @@ public class Particle extends GameWindow{
 
     public Ellipse2D getEffectArea(){
         return new Ellipse2D.Double(currentPos.x - (effectradius + radius), currentPos.y - (effectradius + radius), effectDiameter, effectDiameter);
+    }
+
+    public void calculateAttraction(ArrayList<Particle> particles){
+        for(Particle p : particles){
+            Vector2 tempVector = new Vector2(this.currentPos.x - p.currentPos.x, this.currentPos.y - p.currentPos.y);
+            if(tempVector.magnitude() < this.effectradius){
+                changeVector.addVector(tempVector.normalize().returnMultiply(attractionForces[this.colorCode][p.colorCode]));
+
+            }
+        }                    
     }
 
 }

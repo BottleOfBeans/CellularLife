@@ -16,8 +16,8 @@ public class Vector2 {
         return (x*x + y*y);
     }
     public void addVector(Vector2 gVector){
-        x = gVector.x;
-        y = gVector.y;
+        x += gVector.x;
+        y += gVector.y;
     }
     public void divide(double z){
         if(z != 0){
@@ -28,6 +28,9 @@ public class Vector2 {
     public void multiply(double z){
         x *= z;
         y *= z;
+    }
+    public Vector2 returnMultiply(double z){
+        return new Vector2(x * z, y * z);
     }
     public Vector2 returnDivide(double z){
         return new Vector2(x/z, y/z);

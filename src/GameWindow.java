@@ -97,7 +97,6 @@ public class GameWindow extends JPanel  implements Runnable{
     }
 
     public void update(){
-        
     }
 
     //Function that paints the updated version of the frame {FPS} times a second.
@@ -107,16 +106,16 @@ public class GameWindow extends JPanel  implements Runnable{
         super.paintComponent(g);
         Graphics2D graphics = (Graphics2D)g;
 
-        for(Particle p:particles){
-            graphics.setColor(Color.gray);
-            graphics.fill(p.getEffectArea());
-        }
+        // for(Particle p:particles){
+        //     graphics.setColor(Color.gray);
+        //     graphics.fill(p.getEffectArea());
+        // }
 
         for(Particle p : particles){
             graphics.setColor(p.color);
             graphics.fill(p.getParticle());
-            graphics.setColor(Color.PINK);
-            graphics.draw(p.directionLine());
+            //graphics.setColor(Color.PINK);
+            //graphics.draw(p.directionLine());
             p.calculateAttraction(particles);
             p.updateLocation();
         }

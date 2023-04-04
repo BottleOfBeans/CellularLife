@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -35,7 +36,8 @@ public class GameWindow extends JPanel  implements Runnable{
 
     //Game Values
     int FPS = 144;
-
+    double zoomX = .2;
+    double zoomY = .2;
 
     //Creating the game windows and setting up the settings
     public GameWindow(){
@@ -66,11 +68,10 @@ public class GameWindow extends JPanel  implements Runnable{
         Random rand = new Random();
         
         for(int i = 0; i < MaxParticle; i++){
-            double randomXVelo = rand.nextDouble(-50,50);
-            double randomYVelo = rand.nextDouble(-50,50);
-            double randomXPos = rand.nextInt(0,gameWidth);
-            double randomYPos = rand.nextInt(0,gameHeight);
-            particles.add(new Particle(new Vector2(randomXVelo, randomYVelo), new Vector2(randomXPos, randomYPos)));
+            double randomAngle = rand.nextInt(0,360);
+            double randomXPos = rand.nextDouble(0, gameWidth / zoomX);
+            double randomYPos = rand.nextDouble(0, gameHeight / zoomY);
+            particles.add(new Particle(new Vector2(randomAngle), new Vector2(randomXPos, randomYPos)));
         }
 
 
@@ -88,7 +89,7 @@ public class GameWindow extends JPanel  implements Runnable{
 
             lastTime = currentTime;
             if(delta >= 1){
-                update();
+                update(delta);
                 repaint();
                 delta--;
             }
@@ -96,7 +97,11 @@ public class GameWindow extends JPanel  implements Runnable{
         }
     }
 
-    public void update(){
+    public void update(double deltaTime){
+        for(Particle p : particles){
+            p.updateParticle(particles);
+            p.updateLocation(deltaTime);
+        }
     }
 
     //Function that paints the updated version of the frame {FPS} times a second.
@@ -106,6 +111,9 @@ public class GameWindow extends JPanel  implements Runnable{
         super.paintComponent(g);
         Graphics2D graphics = (Graphics2D)g;
 
+        AffineTransform oldTransform = graphics.getTransform();
+        graphics.scale(zoomX, zoomY);
+
         // for(Particle p:particles){
         //     graphics.setColor(Color.gray);
         //     graphics.fill(p.getEffectArea());
@@ -114,11 +122,11 @@ public class GameWindow extends JPanel  implements Runnable{
         for(Particle p : particles){
             graphics.setColor(p.color);
             graphics.fill(p.getParticle());
-            //graphics.setColor(Color.PINK);
+            //graphics.setColor(Color.BLACK);
             //graphics.draw(p.directionLine());
-            p.calculateAttraction(particles);
-            p.updateLocation();
         }
+
+        graphics.setTransform(oldTransform);
 
         //Stopping the use of the library to ensure that no more processing power than needed is used
         graphics.dispose();

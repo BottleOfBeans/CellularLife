@@ -41,8 +41,11 @@ public class GameWindow extends JPanel implements Runnable {
 
     // Game Values
     int FPS = 144;
-    double zoomX = .2;
-    double zoomY = .2;
+    double zoomX = 0.3;
+    double zoomY = 0.3;
+
+    double zoomXOffset = 1.3;
+    double zoomYOffset = 1.3;
 
     // Creating the game windows and setting up the settings
     public GameWindow() {
@@ -61,7 +64,7 @@ public class GameWindow extends JPanel implements Runnable {
     /*
      * Particles!
      */
-    public double MaxParticle = 500; // Maximum particle amount
+    public double MaxParticle = 600; // Maximum particle amount
     public static ArrayList<Particle> particles = new ArrayList<Particle>(); // List containing all of the particles
 
     // Loop that runs the thread, allows for it to sleep and start and ensures
@@ -76,8 +79,8 @@ public class GameWindow extends JPanel implements Runnable {
         // Creating a bunch of random particles with adjustment to zoom
         for (int i = 0; i < MaxParticle; i++) {
             double randomAngle = rand.nextInt(0, 360);
-            double randomXPos = rand.nextDouble(0, gameWidth / zoomX);
-            double randomYPos = rand.nextDouble(0, gameHeight / zoomY);
+            double randomXPos =  rand.nextDouble(0 + gameWidth*zoomXOffset/2, gameWidth / zoomX - gameWidth*zoomXOffset/2); // gameWidth/zoomX / 2 ; (For Center)
+            double randomYPos =  rand.nextDouble(0 + gameHeight*zoomYOffset/2, gameHeight / zoomY - gameHeight*zoomYOffset/2); // gameHeight/zoomY / 2 ; (For Center)
             particles.add(new Particle(new Vector2(randomAngle), new Vector2(randomXPos, randomYPos)));
         }
 
@@ -123,8 +126,8 @@ public class GameWindow extends JPanel implements Runnable {
 
         // Uncomment below code to visualize effect area
         // for(Particle p:particles){
-        // graphics.setColor(Color.gray);
-        // graphics.fill(p.getEffectArea());
+        //graphics.setColor(Color.gray);
+        //graphics.fill(p.getEffectArea());
         // }
 
         // Iterating through all of the particles and displaying them

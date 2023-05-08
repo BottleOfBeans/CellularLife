@@ -7,14 +7,14 @@ public class Particle extends GameWindow {
 
     // Visual Effects
     double radius = 5;
-
+    double blur = 0;
     // Game Speed Effects
     double tickSpeed = 3;
-    double speed = 10;
+    double speed = 6;
 
     // Equation Variables
     double effectradius = 55;
-    double rotationProportional = -6; // Beta
+    double rotationProportional = 6; // Beta
     double fixedRotation = 120; // Alpha
 
     // Various Constructor Values
@@ -55,7 +55,7 @@ public class Particle extends GameWindow {
 
     // Various Get methods for location, object itself and effect areas.
     public Ellipse2D getParticle() {
-        return new Ellipse2D.Double(currentPos.x - radius, currentPos.y - radius, diameter, diameter);
+        return new Ellipse2D.Double(currentPos.x - (radius+blur), currentPos.y - (radius+blur), (diameter+blur*2), (diameter+blur*2));
     }
 
     public Line2D directionLine() {

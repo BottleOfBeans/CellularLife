@@ -25,6 +25,10 @@ public class Vector2 {
         x += gVector.x;
         y += gVector.y;
     }
+    public void subtractVector(Vector2 gVector){
+        x -= gVector.x;
+        y -= gVector.y;
+    }
     public void divide(double z){
         if(z != 0){
             x /= z;
@@ -47,5 +51,8 @@ public class Vector2 {
     public void multiplyVectors( Vector2 gvector){
         x *= gvector.x;
         y *= gvector.y;
+    }
+    public Vector2 returnSubtract(Vector2 gvector){
+        return (new Vector2(this.x - gvector.x, this.y - gvector.y));
     }
 }
